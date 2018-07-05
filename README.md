@@ -1,8 +1,9 @@
 opentype.js
 ===========
-[![Gitter](https://badges.gitter.im/nodebox/opentype.js.svg)](https://gitter.im/nodebox/opentype.js)&nbsp;
-[![npm](https://img.shields.io/npm/v/opentype.js.svg)](https://www.npmjs.com/package/opentype.js)&nbsp;
-[![david-dm](https://david-dm.org/nodebox/opentype.js.svg)](https://david-dm.org/nodebox/opentype.js)
+[![npm](https://img.shields.io/npm/v/opentype.js.svg)](https://www.npmjs.com/package/opentype.js) 
+[![Build Status](https://travis-ci.org/nodebox/opentype.js.svg?branch=master)](https://travis-ci.org/nodebox/opentype.js) 
+[![david-dm](https://david-dm.org/nodebox/opentype.js.svg)](https://david-dm.org/nodebox/opentype.js) 
+[![Gitter](https://badges.gitter.im/nodebox/opentype.js.svg)](https://gitter.im/nodebox/opentype.js) 
 
 opentype.js is a JavaScript parser and writer for TrueType and OpenType fonts.
 
@@ -26,7 +27,7 @@ Here's an example. We load a font, then display it on a canvas with id "canvas":
         }
     });
 
-See [the project website](http://nodebox.github.io/opentype.js/) for a live demo.
+See [the project website](https://opentype.js.org/) for a live demo.
 
 Features
 ========
@@ -35,6 +36,7 @@ Features
 * Support for WOFF, OTF, TTF (both with TrueType `glyf` and PostScript `cff` outlines)
 * Support for kerning (Using GPOS or the kern table).
 * Support for ligatures.
+* Support for TrueType font hinting.
 * Very efficient.
 * Runs in the browser and node.js.
 
@@ -46,6 +48,12 @@ Installation
 [Download the latest ZIP](https://github.com/nodebox/opentype.js/archive/master.zip) and grab the files in the `dist`
 folder. These are compiled.
 
+### Using npm
+
+    npm install --save opentype.js
+
+OpenType.js uses ES6-style imports, so debugging it in Node.js requires running `npm run build` first. Use `npm run watch` to automatically rebuild when files change.
+
 ### Using Bower
 
 To install using [Bower](http://bower.io/), enter the following command in your project directory:
@@ -55,12 +63,12 @@ To install using [Bower](http://bower.io/), enter the following command in your 
 You can then include them in your scripts using:
 
     <script src="/bower_components/opentype.js/dist/opentype.js"></script>
+    
+### Using via a CDN
 
-### Using Browserify
+To use via a CDN, include the following code in your html:
 
-To install using [Browserify](http://browserify.org/), enter the following command in your project directory:
-
-    npm install --save opentype.js
+    <script src="https://cdn.jsdelivr.net/npm/opentype.js@latest/dist/opentype.min.js"></script>
 
 API
 ===
@@ -147,6 +155,7 @@ Options is an optional object containing:
 * `kerning`: if true takes kerning information into account (default: true)
 * `features`: an object with [OpenType feature tags](https://www.microsoft.com/typography/otspec/featuretags.htm) as keys, and a boolean value to enable each feature.
 Currently only ligature features "liga" and "rlig" are supported (default: true).
+* `hinting`: if true uses TrueType font hinting if available (default: false).
 
 _Note: there is also `Font.getPaths` with the same arguments which returns a list of Paths._
 
@@ -159,6 +168,9 @@ Create a Path that represents the given text.
 
 Options is an optional object containing:
 * `kerning`: if true takes kerning information into account (default: true)
+* `features`: an object with [OpenType feature tags](https://www.microsoft.com/typography/otspec/featuretags.htm) as keys, and a boolean value to enable each feature.
+Currently only ligature features "liga" and "rlig" are supported (default: true).
+* `hinting`: if true uses TrueType font hinting if available (default: false).
 
 #### `Font.drawPoints(ctx, text, x, y, fontSize, options)`
 Draw the points of all glyphs in the text. On-curve points will be drawn in blue, off-curve points will be drawn in red. The arguments are the same as `Font.draw`.
@@ -179,6 +191,18 @@ Convert the character to a `Glyph` object. Returns null if the glyph could not b
 
 #### `Font.getKerningValue(leftGlyph, rightGlyph)`
 Retrieve the value of the [kerning pair](https://en.wikipedia.org/wiki/Kerning) between the left glyph (or its index) and the right glyph (or its index). If no kerning pair is found, return 0. The kerning value gets added to the advance width when calculating the spacing between glyphs.
+
+#### `Font.getAdvanceWidth(text, fontSize, options)`
+Returns the advance width of a text.
+
+This is something different than Path.getBoundingBox() as for example a
+suffixed whitespace increases the advancewidth but not the bounding box
+or an overhanging letter like a calligraphic 'f' might have a quite larger
+bounding box than its advance width.
+
+This corresponds to canvas2dContext.measureText(text).width
+* `fontSize`: Size of the text in pixels (default: 72).
+* `options`: See Font.getPath
 
 #### The Glyph object
 A Glyph is an individual mark that often corresponds to a character. Some glyphs, such as ligatures, are a combination of many characters. Glyphs are the basic building blocks of a font.

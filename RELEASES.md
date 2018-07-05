@@ -1,3 +1,55 @@
+0.9.0 (June 21, 2018)
+=====================
+* Update/Migrate rollup, update all dependencies, add package-lock.json and fix circular dependency (thanks @jolg42!)
+* Parse cmap table with platform id 0 as well (PR #350, fixes #348) (thanks @moyogo!)
+* Prevent auto-generated postScriptName from containing whitespace (#339) (thanks @mqudsi!)
+* Support non-Basic-Multilingual-Plane (BMP) characters (#338) (thanks @antonytse!)
+* GPOS: display correct error message in some cases of malformed data (#336) (thanks @fpirsch!)
+* Restore simple GPOS kerning in font.getKerningValue (#335) (thanks @fpirsch!)
+* Fix duplicated lineTo when using `getPath` (#328) (thanks @jolg42!)
+* Change example generate-font-node.js to be compatible with any Node.js version (thanks @jolg42!)
+
+0.8.0 (March 6, 2018)
+=====================
+* Fix loading font file on Android devices (thanks @maoamid!).
+* Fix loading fonts from a local source (file://data/... for Android for example (thanks @IntuilabGit!).
+* Fixing 2 issues when hinting "mutlu.ttf" (thanks @axkibe!).
+* Add some support for OpenType font variations (thanks @taylorb-monotype!).
+* Make cmap table format 12 if needed (thanks @Jolg42!).
+* Enable uglify's mangle and compress optimizations for a ~30% smaller minified file. (thanks @lojjic & @Jolg42!).
+* Better parsing of NULL pointers (thanks @fpirsch!).
+* Fix bad path init (empty glyphs) (thanks @fpirsch!).
+* Rewrite GPOS parsing (thanks @fpirsch!).
+* Roboto-Black.ttf updated (thanks @Jolg42!).
+
+0.7.3 (July 18, 2017)
+=====================
+* Fix "Object x already has key" error in Safari (thanks @neiltron!).
+* Fixed a bug where Font.getPaths() didn't pass options (thanks @keeslinp!).
+
+0.7.2 (June 7, 2017)
+====================
+* WOFF fonts with cvt tables now parse correctly.
+* Migrated to ES6 modules and let/const.
+* Use Rollup to bundle the JavaScript.
+
+0.7.1 (Apr 25, 2017)
+====================
+* Auto-generated glyph IDs (CID-keyed fonts) are now prefixed with "gid", e.g. "gid42".
+* Fix ligature substitution for fonts with coverage table format 2.
+* Better error messages when no valid cmap is found.
+
+0.7.0 (Apr 25, 2017)
+====================
+* Add font hinting (thanks @axkibe!)
+* Add support for CID-keyed fonts, thanks to @tshinnic.
+* TrueType fonts with signature 'true' or 'typ1' are also supported.
+* Fixing rounding issues.
+* Add GSUB and kern output in font-inspector.
+* Add font loading error callback.
+* Dev server turns browser caching off.
+* Add encoding support for variation adjustment deltas (thanks @brawer!).
+
 0.6.9 (Jan 17, 2017)
 ====================
 * Add ligature rendering (thanks @fpirsch!)

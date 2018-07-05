@@ -42,6 +42,7 @@
     <label><input type="checkbox" onchange="drawMetricsChanged(this)">Draw Metrics</label>
     <label><input type="checkbox" onchange="kerningChanged(this)" checked="checked">Kerning</label>
     <label><input type="checkbox" onchange="ligaturesChanged(this)" checked="checked">Ligatures</label>
+    <label id="hinting-label" class="disabled"><input id="hinting-checkbox" type="checkbox" onchange="hintingChanged(this)" disabled="true">Hinting</label>
 
     <hr>
 
@@ -71,7 +72,7 @@
     <div class="explain">
         <h1>Free Software</h1>
         <p>opentype.js is available on <a href="https://github.com/nodebox/opentype.js">GitHub</a> under the <a href="https://raw.github.com/nodebox/opentype.js/master/LICENSE">MIT License</a>.</p>
-        <p>Copyright &copy; 2015 Frederik De Bleser.</p>
+        <p>Copyright &copy; 2017 Frederik De Bleser.</p>
     </div>
 
     <hr>
@@ -86,6 +87,7 @@ var drawPoints = true;
 var drawMetrics = false;
 var kerning = true;
 var ligatures = true;
+var hinting = false;
 var previewPath = null;
 var snapPath = null;
 var snapStrength = 80;
@@ -93,6 +95,8 @@ var snapDistance = 53;
 var snapX = 0;
 var snapY = 0;
 var fontSizeSlider = document.getElementById("font-size-range");
+var hintingCheckbox = document.getElementById("hinting-checkbox");
+var hintingLabel = document.getElementById("hinting-label");
 
 function drawPointsChanged(e) {
     drawPoints = e.checked;
@@ -114,8 +118,13 @@ function ligaturesChanged(e) {
     renderText();
 }
 
+function hintingChanged(e) {
+    hinting = e.checked;
+    renderText();
+}
+
 function fontSizeChanged() {
-    fontSize = fontSizeSlider.value;
+    fontSize = parseInt(fontSizeSlider.value, 10);
     document.getElementById('fontSize').innerHTML = '' + fontSize;
     renderText();
 }
@@ -175,6 +184,7 @@ function renderText() {
     var previewCtx = document.getElementById('preview').getContext('2d');
     var options = {
         kerning: kerning,
+        hinting: hinting,
         features: {
             liga: ligatures,
             rlig: ligatures
@@ -257,6 +267,15 @@ function onFontLoaded(font) {
         glyph.drawMetrics(ctx, x, y, fontSize);
     }
 
+    if (font.hinting) {
+        hintingCheckbox.disabled = false;
+        hintingLabel.className = '';
+    } else {
+        hintingCheckbox.disabled = true;
+        hintingCheckbox.checked = false;
+        hintingLabel.className = 'disabled';
+    }
+
     renderText();
 }
 
@@ -272,10 +291,10 @@ function onReadFile(e) {
         } catch (err) {
             showErrorMessage(err.toString());
         }
-    }
+    };
     reader.onerror = function(err) {
         showErrorMessage(err.toString());
-    }
+    };
 
     reader.readAsArrayBuffer(file);
 }
